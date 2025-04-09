@@ -1,10 +1,11 @@
 import { useState } from "react";
-import "./unicorn.css";
+import "../styles/unicorn.css";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Panel } from "primereact/panel";
+import { Message } from "primereact/message";
 
 const UnicornsView = ({
   unicorns,
@@ -14,7 +15,9 @@ const UnicornsView = ({
   modoCreacion,
   activarCreacion,
   cancelarCreacion,
-  onVolver
+  onVolver,
+  mensajeError,
+  limpiarError
 }) => {
   const [modoEdicionId, setModoEdicionId] = useState(null);
   const [editForm, setEditForm] = useState({ name: "", color: "", age: "", power: "" });
@@ -39,16 +42,19 @@ const UnicornsView = ({
     }
 
     try {
-      await fetch(`https://crudcrud.com/api/845cb6ca98d547db9af07aa0024b439f/unicornios/${id}`, {
+      const res = await fetch(`https://crudcrud.com/api/845cb6ca98d547db9af07aa0024b439f/unicornios/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, color, age: ageNumber, power }),
       });
 
+      if (!res.ok) throw new Error("Error al actualizar unicornio.");
+
       setModoEdicionId(null);
       recargarUnicornios();
     } catch (error) {
       console.error("Error al actualizar unicornio:", error);
+      alert("No se pudo actualizar el unicornio.");
     }
   };
 
@@ -81,6 +87,10 @@ const UnicornsView = ({
   return (
     <div className="unicorns-view p-4">
       <h2 className="mb-4">Lista de Unicornios</h2>
+
+      {mensajeError && (
+        <Message severity="error" text={mensajeError} onClick={limpiarError} style={{ marginBottom: "1rem" }} />
+      )}
 
       <div className="mb-3 flex gap-2">
         <Button label="Volver" icon="pi pi-arrow-left" onClick={onVolver} />
@@ -171,7 +181,7 @@ const UnicornsView = ({
                   }
                 />
               ) : (
-                <div className="flex gap-2 justify-content-start">
+                <div className="flex gap-2">
                   <Button icon="pi pi-pencil" className="p-button-sm p-button-warning" onClick={() => activarEdicion(rowData)} />
                   <Button icon="pi pi-trash" className="p-button-sm p-button-danger" onClick={() => eliminarUnicornio(rowData._id)} />
                 </div>
