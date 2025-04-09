@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../styles/unicorn.css";
+
 
 const UnicornCreate = () => {
   const [form, setForm] = useState({ name: "", color: "", age: "", power: "" });
