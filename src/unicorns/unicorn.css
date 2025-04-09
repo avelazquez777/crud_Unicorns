@@ -1,0 +1,18 @@
+
+.unicorns-view {
+    padding: 20px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    background-color: purple;
+  }
+  
+  .unicorns-view ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .unicorns-view li {
+    padding: 10px;
+    border-bottom: 1px solid red;
+  }
+  
