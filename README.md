@@ -1,119 +1,125 @@
-🦄 Unicorn CRUD App (React + crudcrud.com)
+🦄 Unicorn Manager
+Una aplicación web para gestionar unicornios y productos con operaciones CRUD. Esta aplicación en React ofrece una interfaz fácil de usar para crear, leer, actualizar y eliminar unicornios y productos.
 
-Este proyecto es una aplicación simple en React que permite **crear**, **leer**, **actualizar** y **eliminar** unicornios mágicos usando la API gratuita de [crudcrud.com](https://crudcrud.com/).
+📋 Funcionalidades
+Gestión de Unicornios:
+Crear, ver, editar y eliminar unicornios
 
----
+Almacenar datos de unicornios con API externa (CRUD CRUD)
 
-## 🚀 Funcionalidades
+Caché local con sincronización periódica con la API
 
-- 📄 Listado de unicornios
-- ➕ Crear un nuevo unicornio
-- 🗑️ Eliminar unicornios
-- 🎨 Fondo animado con un GIF
-- Navegación entre rutas con `react-router-dom`
+-Gestión de Productos:
+Crear, ver, editar y eliminar productos
 
----
+Persistencia mediante localStorage
 
-## 🛠️ Tecnologías usadas
+Validación de formularios
 
-- React
-- React Router DOM
-- CSS
-- fetch API
-- [crudcrud.com](https://crudcrud.com/) (API para almacenamiento temporal)
+-Interfaz de Usuario:
+Diseño limpio y responsivo
 
----
+Validación de formularios con Formik y Yup
 
-## 🧾 Estructura de archivos principal
+Navegación con React Router
 
-```
+🚀 Comenzando
+Requisitos previos
+Node.js (v14 o superior)
+
+npm o yarn
+
+-Instalación
+Clona el repositorio:
+git clone https://github.com/avelazquez777/crud_Unicorns.git  
+cd unicorn-manager  
+
+-Instala las dependencias:
+npm install  
+# o  
+yarn install  
+
+
+-Actualiza la clave de API de CRUD CRUD:
+
+Obtén una clave gratuita desde CRUD CRUD
+Reemplaza el valor de crudCrudApiKey en src/context/unicornContext.jsx con tu clave de API:
+const crudCrudApiKey = 'YOUR_API_KEY_HERE';
+
+
+-Inicia el servidor de desarrollo:
+npm run dev  
+# o  
+yarn dev  
+
+
+-Abre tu navegador y navega a http://localhost:5173 (o al puerto que aparezca en tu terminal)
+
+💻 Uso
+-Gestión de Unicornios
+Ver Unicornios: Navega a "Unicornios" en la barra de navegación
+
+Crear Unicornio: Haz clic en el botón "Crear nuevo unicornio"
+
+Editar Unicornio: Haz clic en el botón "Editar" de cualquier unicornio en la lista
+
+Eliminar Unicornio: Haz clic en el botón "Eliminar" de cualquier unicornio en la lista
+
+Actualizar Datos: Haz clic en "Actualizar datos" para sincronizar con la API
+
+-Gestión de Productos
+Ver Productos: Navega a "Productos" en la barra de navegación
+
+Crear Producto: Haz clic en el botón "Agregar nuevo producto"
+
+Editar Producto: Haz clic en el botón "Editar" de cualquier producto en la lista
+
+Eliminar Producto: Haz clic en el botón "Eliminar" de cualquier producto en la lista
+
+🛠️ Tech Stack
+React: Librería de interfaz de usuario
+
+React Router: Navegación
+
+Context API: Gestión de estado
+
+Formik & Yup: Manejo y validación de formularios
+
+CRUD CRUD API: Backend para datos de unicornios
+
+LocalStorage: Persistencia de datos para productos y unicornios sin conexión
+
+📝 Notas
+La clave gratuita de la API de CRUD CRUD expira después de 1 día o 100 Requests (cada que se actualizan los datos de 
+unicornios, se crea, edita o elimina un unicornio, es un Requests). Asegúrate de actualizarla cuando sea necesario.
+
+Los datos de productos se almacenan únicamente en el localStorage del navegador sin persistencia en backend.
+
+Los datos de unicornios se almacenan tanto en la API como en localStorage para acceso sin conexión.
+
 src/
-├── App.css
-├── App.jsx
-├── assets
-│   └── react.svg
-├── home.jsx
-├── icon
-│   └── caUnicorn.gif
-├── index.css
-├── main.jsx
-├── styles
-│   └── unicorn.css
-└── unicorns
-    ├── index.jsx
-    ├── unicornsContainer.jsx
-    ├── unicornsCreate.jsx
-    └── unicornsView.jsx
+├── App.jsx                  # Componente principal de la aplicación
+├── component/
+│   ├── products/            # Componentes para la gestión de productos
+│   │   ├── index.jsx        # Rutas de productos
+│   │   ├── productData.js   # Funciones para el manejo de datos de productos
+│   │   ├── productForm.jsx  # Formulario para crear/editar productos
+│   │   └── productsView.jsx # Vista de la lista de productos
+│   └── unicorns/            # Componentes para la gestión de unicornios
+│       ├── index.jsx        # Rutas de unicornios
+│       ├── unicornForm.jsx  # Formulario para crear/editar unicornios
+│       ├── unicornsView.jsx # Vista de la lista de unicornios
+│       └── useUnicornForm.js # Custom hook para el formulario de unicornios
+├── context/
+│   └── unicornContext.jsx   # Proveedor de contexto para unicornios
+├── home.jsx                 # Componente de la página de inicio
+├── navbar.jsx               # Componente de la barra de navegación
+└── styles/
+    └── unicorn.css          # Estilos para la aplicación
 
-```
-
----
-
-## 📦 Instalación
-
-1. Cloná el repositorio:
-
-```bash
-git clone https://github.com/tu_usuario/unicorn-crud.git
-cd unicorn-crud
-```
-
-2. Instalá las dependencias:
-
-```bash
-npm install
-```
-
-3. Iniciá la app:
-
-```bash
-npm run dev
-```
-
----
-
-## 📡 API base (crudcrud)
-
-Reemplazá la variable `baseURL` en tus archivos `.jsx` con tu propia API URL de [crudcrud.com](https://crudcrud.com/).
-
-```js
-const baseURL = "[https://crudcrud.com/api/TU_API_KEY](https://crudcrud.com/api/845cb6ca98d547db9af07aa0024b439f)/unicornios";
-```
-
-Recordá que la URL de `crudcrud.com` **expira a los 24h si no usás una cuenta registrada**.
-
----
-
-## 🖼️ Agregar un fondo animado con un GIF
-
-1. Guardá tu GIF en `src/assets/fondo.gif`
-2. En tu archivo `unicorn.css`, agregá:
-
-```css
-body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-  background-image: url('src/icon/caUnicorn.gif'); /* GIF de unicornio */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  min-height: 100vh;
-}
-```
-
----
-
-## 📝 Notas
-
-- El campo `age` es validado para que sea un número positivo.
-- Todos los campos son obligatorios excepto la edad (pero debe ser un número si se completa).
-- Después de crear un unicornio, se redirige automáticamente a la lista.
-- El botón "Cancelar" en el formulario vuelve a la lista sin guardar cambios.
 
 ---
 
 ## ✨ Créditos
-
-Hecho con amor por Ravinale Axel y Velazquez Alejo 🧑‍💻  
+Velazquez Alejo
 Powered by React + Magia de Unicornios ✨🦄
