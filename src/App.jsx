@@ -1,22 +1,26 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./home";
-import UnicornsIndex from "./unicorns/index";
-import UnicornCreate from "./unicorns/unicornsCreate";
-import 'primereact/resources/themes/lara-light-blue/theme.css'; 
-import 'primereact/resources/primereact.min.css';                
-import 'primeicons/primeicons.css';                              
-import 'primeflex/primeflex.css';                                
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { UnicornProvider } from './context/unicornContext';
 
+import UnicornRoutes from './component/unicorns';
+import Home from './home';
+import Navbar from './navbar';
+import ProductRoutes from './component/products'; // Importamos las rutas de productos (aún por crear)
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <Router>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/unicornios" element={<UnicornsIndex />} />
-        <Route path="/crear-unicornio" element={<UnicornCreate />} />
+        <Route path="/unicornios/*" element={
+          <UnicornProvider>
+            <UnicornRoutes />
+          </UnicornProvider>
+        } />
+        <Route path="/productos/*" element={<ProductRoutes />} />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 };
 

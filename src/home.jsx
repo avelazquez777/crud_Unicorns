@@ -1,26 +1,13 @@
-import { useNavigate } from "react-router-dom";
-import { Button } from "primereact/button";
-import { Card } from "primereact/card";
-import "./styles/unicorn.css";
+import React from 'react';
+import './styles/unicorn.css'; // Asegúrate de importar el archivo CSS
 
 const Home = () => {
-    const navigate = useNavigate();
-  
-    return (
-      <div className="home-container">
-        <video autoPlay loop muted className="background-video">
-          <source src="/icon/unicornio.mp4" type="video/mp4" />
-          Tu navegador no soporta videos HTML5.
-        </video>
-  
-        <div className="content">
-          <Card title="Bienvenido al mundo de los Unicornios 🦄">
-            <Button label="Entrar" onClick={() => navigate("/unicornios")} />
-          </Card>
-        </div>
-      </div>
-    );
-  };
-  
+  return (
+    <div className="home-container">
+      <h1>Bienvenido al Gestor de Unicornios y Productos</h1>
+      <p>Navega por el menu de arriba para llegar a lo solicitado</p>
+    </div>
+  );
+};
 
 export default Home;
