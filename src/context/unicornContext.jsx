@@ -1,8 +1,9 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import axios from 'axios';
 
 const UnicornContext = createContext();
 
-const crudCrudApiKey = '03774d4091d84d728160b37ce41cb3f5';
+const crudCrudApiKey = 'e91e26c825a64d24bfd84f9e39699613';
 const unicornApi = `https://crudcrud.com/api/${crudCrudApiKey}/unicornios`;
 
 // Función para obtener fecha de última actualización
@@ -17,7 +18,6 @@ const shouldFetchFromApi = (forceUpdate = false) => {
   const lastUpdate = getLastUpdateTime();
   if (!lastUpdate) return true;
   
-  // Actualizamos desde la API cada 1 hora como máximo
   const ONE_HOUR = 60 * 60 * 1000;
   return Date.now() - parseInt(lastUpdate) > ONE_HOUR;
 };
@@ -30,20 +30,16 @@ export const UnicornProvider = ({ children }) => {
     initializeData();
   }, []);
 
-   const initializeData = async () => {
+  const initializeData = async () => {
     const localUnicorns = localStorage.getItem('unicorns');
-    
     if (localUnicorns) {
       setUnicorns(JSON.parse(localUnicorns));
     }
-    
     if (shouldFetchFromApi()) {
       await getUnicornsFromApi();
     }
-    
     setIsInitialized(true);
   };
-
 
   const updateLocalStorage = (data) => {
     localStorage.setItem('unicorns', JSON.stringify(data));
@@ -52,8 +48,7 @@ export const UnicornProvider = ({ children }) => {
 
   const getUnicornsFromApi = async () => {
     try {
-      const response = await fetch(unicornApi);
-      const data = await response.json();
+      const { data } = await axios.get(unicornApi);
       setUnicorns(data);
       updateLocalStorage(data);
       return data;
@@ -63,7 +58,6 @@ export const UnicornProvider = ({ children }) => {
     }
   };
 
-
   const getUnicorns = async (forceUpdate = false) => {
     if (forceUpdate || shouldFetchFromApi()) {
       return await getUnicornsFromApi();
@@ -71,31 +65,24 @@ export const UnicornProvider = ({ children }) => {
     return unicorns;
   };
 
-
   const getUnicornById = async (_id) => {
     const localUnicorn = unicorns.find(unicorn => unicorn._id === _id);
-    
-    if (localUnicorn) {
-      return localUnicorn;
-    }
+    if (localUnicorn) return localUnicorn;
 
     try {
-      const response = await fetch(`${unicornApi}/${_id}`);
-      const unicorn = await response.json();
-      
-
+      const { data: unicorn } = await axios.get(`${unicornApi}/${_id}`);
       const updatedUnicorns = [...unicorns];
       const existingIndex = updatedUnicorns.findIndex(u => u._id === _id);
-      
+
       if (existingIndex >= 0) {
         updatedUnicorns[existingIndex] = unicorn;
       } else {
         updatedUnicorns.push(unicorn);
       }
-      
+
       setUnicorns(updatedUnicorns);
       updateLocalStorage(updatedUnicorns);
-      
+
       return unicorn;
     } catch (error) {
       console.error('Error al obtener unicornio por ID:', error);
@@ -103,23 +90,12 @@ export const UnicornProvider = ({ children }) => {
     }
   };
 
-
   const createUnicorn = async (newUnicorn) => {
     try {
-      const response = await fetch(unicornApi, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newUnicorn),
-      });
-      const createdUnicorn = await response.json();
-      
-
+      const { data: createdUnicorn } = await axios.post(unicornApi, newUnicorn);
       const updatedUnicorns = [...unicorns, createdUnicorn];
       setUnicorns(updatedUnicorns);
       updateLocalStorage(updatedUnicorns);
-      
       return createdUnicorn;
     } catch (error) {
       console.error('Error al crear unicornio:', error);
@@ -127,17 +103,12 @@ export const UnicornProvider = ({ children }) => {
     }
   };
 
-
   const deleteUnicorn = async (_id) => {
     try {
-      await fetch(`${unicornApi}/${_id}`, {
-        method: 'DELETE',
-      });
-      
+      await axios.delete(`${unicornApi}/${_id}`);
       const updatedUnicorns = unicorns.filter(unicorn => unicorn._id !== _id);
       setUnicorns(updatedUnicorns);
       updateLocalStorage(updatedUnicorns);
-      
       return true;
     } catch (error) {
       console.error('Error al eliminar unicornio:', error);
@@ -147,21 +118,12 @@ export const UnicornProvider = ({ children }) => {
 
   const editUnicorn = async (_id, updatedUnicorn) => {
     try {
-      await fetch(`${unicornApi}/${_id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedUnicorn),
-      });
-      
-      const updatedUnicorns = unicorns.map(unicorn => 
+      await axios.put(`${unicornApi}/${_id}`, updatedUnicorn);
+      const updatedUnicorns = unicorns.map(unicorn =>
         unicorn._id === _id ? { ...updatedUnicorn, _id } : unicorn
       );
-      
       setUnicorns(updatedUnicorns);
       updateLocalStorage(updatedUnicorns);
-      
       return true;
     } catch (error) {
       console.error('Error al editar unicornio:', error);
@@ -179,7 +141,7 @@ export const UnicornProvider = ({ children }) => {
         deleteUnicorn,
         editUnicorn,
         isInitialized,
-        refreshFromApi: () => getUnicornsFromApi() // Función para forzar actualización
+        refreshFromApi: () => getUnicornsFromApi(),
       }}
     >
       {children}
